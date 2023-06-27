@@ -1,7 +1,12 @@
 function solution(n, m) {
     let GCD = 0;
-    for(i=1;i<=(n>m?m:n);i++){
-        !(n%i)&&!(m%i)?GCD=i:null;
+    let _n = n
+    let _m = m
+    while(_m !== 0){
+        const remainder = _n % _m;
+        _n = _m ;
+        _m = remainder;
+        GCD = _n;
     }
     
     let LCM = n*m/GCD;

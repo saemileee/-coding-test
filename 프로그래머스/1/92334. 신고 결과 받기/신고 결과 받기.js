@@ -1,34 +1,31 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
 function solution(id_list, report, k) {
-    var answer = [];
-    
-    const idObj = {}
-    id_list.forEach((id)=>(idObj[id]={reportUsers:[], reportedCount:0,mailCount:0}));
-    
-    const freezedIds = [];
-    
-    for(let i = 0; i<report.length; i++){
-        const [user, reportId] = report[i].split(' ');
-        if(!idObj[user].reportUsers.includes(reportId)){
-            idObj[user].reportUsers.push(reportId);
-            idObj[reportId].reportedCount += 1;
-            if(idObj[reportId].reportedCount===k){
-                freezedIds.push(reportId);
-            }
+    let reports = [...new Set(report)].map(a=>{return a.split(' ')});
+    let counts = new Map();
+    for (const bad of reports){
+        counts.set(bad[1],counts.get(bad[1])+1||1)
+    }
+    let good = new Map();
+    for(const report of reports){
+        if(counts.get(report[1])>=k){
+            good.set(report[0],good.get(report[0])+1||1)
         }
     }
-
-
-    const reportArr = Object.entries(idObj);
-
-    for(let i = 0; i<reportArr.length;i++){
-        const [id, {reportUsers}] = reportArr[i];
-        reportUsers.forEach((reportUser)=>{
-            if(freezedIds.includes(reportUser)){
-                reportArr[i][1].mailCount += 1;
-            }
-        })
-    }
-    
-    answer = reportArr.map((report)=>report[1].mailCount);
+    let answer = id_list.map(a=>good.get(a)||0)
     return answer;
 }
